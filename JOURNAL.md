@@ -21,7 +21,7 @@ surfaces `has_tests` for every analyzed repo and is covered by a unit test, so d
 scoring and feedback can factor test coverage into a portfolio review.
 
 **Branch name:** feat/50-repo-analysis-has-tests
-**Setup confirmation:** [ ] App runs locally at localhost:5173
+**Setup confirmation:** [x] App runs locally at localhost:5173
 **Cohort ledger:** [x] Issue added to cohort ledger (Section 1c, row 103)
 
 ### "Is this right for me?" — selection notes
