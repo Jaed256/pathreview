@@ -33,3 +33,23 @@ scoring and feedback can factor test coverage into a portfolio review.
   surface a boolean" is easy to verify with a unit test, so I'll know when it's done.
 - **Good first issue + Tier 1**, labeled `agent`, `enhancement`, `tests` — aligned with where
   I want to build confidence before taking on a harder Week 8/9 issue.
+
+## Week 8 — Reproduction & solution planning
+
+**Reproduction commit link:** https://github.com/Jaed256/pathreview/commits/feat/50-repo-analysis-has-tests
+
+**Reproduction summary:**
+I added a unit test (`tests/unit/test_github_tool.py`) that mocks the GitHub API and asserts
+the repo-analysis metadata built by `GitHubTool._fetch_repo_metadata` includes a `has_tests`
+boolean. Running it fails on `assert "has_tests" in result.data` — the returned dict contains
+`has_readme` but no `has_tests` — which reproduces the gap exactly where the fix will go.
+
+**PLAN.md Link:** https://github.com/Jaed256/pathreview/blob/feat/50-repo-analysis-has-tests/PLAN.md
+
+**Walkthrough video (recommended):** (not recorded)
+
+**Blockers or open questions:**
+- Which GitHub endpoint to use for file detection — a single recursive git-tree call vs the
+  contents API — given rate limits and tree truncation on very large repos.
+- Whether `has_tests` should be consumed downstream (review scoring/schema) or only surfaced
+  in the tool output for the scope of this issue.
