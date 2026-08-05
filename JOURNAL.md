@@ -77,7 +77,7 @@ change) — confirming my additions introduce no *new* failures.
 
 ### Check-in 2 (end of week)
 
-**PR Link:** <add the pull-request URL here once it's open>
+**PR Link:** https://github.com/ascherj/pathreview/pull/945
 **Branch:** feat/50-repo-analysis-has-tests
 
 **What you built:**
@@ -92,7 +92,7 @@ rather than raising, so a detection failure never breaks analysis.
 `tests/` directory, a singular `test/` directory, `pytest.ini`, a `test_*.py` file, the
 no-marker (→ False) case, and a tree-API-error (graceful → False) case.
 
-**Self-review confirmation:** [ ] make check passes [ ] make test-unit passes
+**Self-review confirmation:** [x] make check passes (no new failures) [x] make test-unit passes
 (In this codebase `github_tool.py` has pre-existing formatting/lint flags on `main`; this
 change introduces no new failures — documented in the PR description.)
 
