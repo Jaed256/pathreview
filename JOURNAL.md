@@ -53,3 +53,47 @@ boolean. Running it fails on `assert "has_tests" in result.data` — the returne
   contents API — given rate limits and tree truncation on very large repos.
 - Whether `has_tests` should be consumed downstream (review scoring/schema) or only surfaced
   in the tool output for the scope of this issue.
+
+## Week 9 — Solution building & PR submission
+
+### Check-in 1 (mid-week)
+
+**Current progress:**
+Implemented the `has_tests` detector in `agent/tools/github_tool.py`. Added a
+`_has_tests(username, repo_name, default_branch)` helper — mirroring the existing
+`_has_readme` — that reads the repository git tree once via the GitHub API and returns
+`True` if it finds a `tests/` or `test/` directory, a `pytest.ini`, or any `test_*.py`
+file, and wired the result into `_fetch_repo_metadata` next to `has_readme`. PLAN.md
+sub-tasks 1, 2, and the error-handling part of 4 are done. Unit tests cover every marker
+plus the no-marker and API-error cases — `pytest tests/unit/test_github_tool.py` → 7 passed.
+
+**Next steps:**
+Run the full `make check` / `make test-unit`, document any pre-existing failures, open the
+PR to `ascherj/pathreview`, and get peer feedback before marking it ready for review.
+
+**Blockers:**
+`github_tool.py` already fails black/ruff formatting checks on `main` (unrelated to this
+change) — confirming my additions introduce no *new* failures.
+
+### Check-in 2 (end of week)
+
+**PR Link:** <add the pull-request URL here once it's open>
+**Branch:** feat/50-repo-analysis-has-tests
+
+**What you built:**
+Added a `has_tests` boolean to the repo-analysis output. A new `_has_tests` helper on
+`GitHubTool` fetches the repository's git tree once and detects a `tests/`/`test/`
+directory, a `pytest.ini`, or any `test_*.py` file; the value is surfaced in
+`_fetch_repo_metadata` alongside `has_readme`. On any API error it degrades to `False`
+rather than raising, so a detection failure never breaks analysis.
+
+**Tests added or updated:**
+`tests/unit/test_github_tool.py` — the reproduction test now passes, plus new cases for a
+`tests/` directory, a singular `test/` directory, `pytest.ini`, a `test_*.py` file, the
+no-marker (→ False) case, and a tree-API-error (graceful → False) case.
+
+**Self-review confirmation:** [ ] make check passes [ ] make test-unit passes
+(In this codebase `github_tool.py` has pre-existing formatting/lint flags on `main`; this
+change introduces no new failures — documented in the PR description.)
+
+**Draft PR feedback received from:** none
