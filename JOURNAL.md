@@ -97,3 +97,66 @@ no-marker (→ False) case, and a tree-API-error (graceful → False) case.
 change introduces no new failures — documented in the PR description.)
 
 **Draft PR feedback received from:** none
+
+## Week 10 — Response, reflection & wrap-up
+
+### Reviewer feedback
+
+**Feedback received:** [ ] Yes  [x] No — still awaiting review
+
+**Summary of feedback:**
+No review has come in yet. PR #945 (https://github.com/ascherj/pathreview/pull/945) was
+opened at the end of Week 9, and per the course note reviewer feedback isn't guaranteed
+during the Summer 2026 pilot. I'll keep an eye on the PR and respond professionally if a
+maintainer comments.
+
+**How you responded:**
+Nothing to respond to yet. If a maintainer requests changes, my plan is to reply on the
+thread, make the change on `feat/50-repo-analysis-has-tests`, and push — not to argue or
+go quiet.
+
+### Reflection
+
+**What was harder than you expected?**
+The hard part wasn't writing the feature — it was deciding what *not* to touch.
+`agent/tools/github_tool.py` already failed `black` and `ruff` on `main` (import ordering
+and some long lines in `execute()`). My instinct was to "clean it up while I'm in here,"
+but that would have buried a focused three-line fix under unrelated formatting churn and
+made the PR harder to review. Learning to leave pre-existing issues alone and just
+document them in the PR description was a genuine judgment call. The GitHub git-tree API
+also had a wrinkle I didn't see coming — it can return `truncated: true` on very large
+repos — which I had to note as a known limitation instead of pretending I'd handled it.
+
+**What did you learn about working in a large codebase?**
+Matching conventions beats personal preference. Rather than design `_has_tests` however I
+liked, I mirrored the existing `_has_readme` helper exactly: same signature shape, same
+error-swallowing (return `False` on any API failure instead of raising), same spot in
+`_fetch_repo_metadata` right next to `has_readme`. In my own projects I set the rules;
+here the codebase already had them (ruff line-length 100, mypy `disallow_untyped_defs`, a
+Makefile with `test-unit`/`check` targets) and my job was to fit in invisibly. A good
+contribution here is one the reviewer barely notices because it looks like it was always
+there.
+
+**How did AI tools help — and where did they fall short?**
+AI was strongest at mechanical scaffolding: locating the right insertion point in an
+unfamiliar file, drafting the helper and the seven unit tests (mocking `httpx` for each
+marker case), and explaining the recursive git-tree endpoint. It fell short on
+environment and judgment. The local stack needs Docker Postgres on port 5433 and `make`,
+and `make` isn't installed on my Windows machine — so I hit the real errors
+(`ECONNREFUSED`, `make: command not found`) and had to work out the `make`-free
+equivalents myself. AI also couldn't decide *scope* for me: whether to fix the
+pre-existing lint was a call I had to own.
+
+**What would you do differently if you started over?**
+I'd set up and verify the whole local environment — Docker, `make`, the full test suite —
+in Week 7, before committing to an issue. A couple of my delays came from environment
+friction I only discovered late. I'd also lean toward an issue in a file that wasn't
+already failing lint, since the pre-existing failures added a constant "is this me or was
+it already broken?" question I kept having to untangle.
+
+**What are you most proud of from this module?**
+That the change is small, honest, and defensive. The detector degrades gracefully — any
+API hiccup returns `False` rather than crashing the whole analysis — and every branch is
+covered by a test. Opening a real PR against a real maintainer's repo, with a template
+that's upfront about what's in scope and what isn't, felt like an actual open-source
+contribution instead of a homework exercise.
